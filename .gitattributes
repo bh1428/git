@@ -18,7 +18,9 @@
 #
 # Always perform LF normalization
 #
- 
+*.md              text diff=markdown
+
 #
 # Never perform LF normalization
 #
+hooks/*             text eol=lf

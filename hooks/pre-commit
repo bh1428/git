@@ -1,0 +1,9 @@
+#!/bin/sh
+# check whether all files are explicitly configured in .gitattributes
+gitattributes_missing=$(git ls-files | git check-attr -a --stdin | grep "text: auto" | wc -l)
+if [ "$gitattributes_missing" -ne "0" ]
+then
+    echo "Error: missing '.gitattributes' settings for:"
+    git ls-files | git check-attr -a --stdin | grep "text: auto"
+    exit 1
+fi
