@@ -19,6 +19,7 @@
 # Always perform LF normalization
 #
 *.md                text diff=markdown
+*.py                text diff=python
 
 #
 # Never perform LF normalization
