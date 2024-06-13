@@ -5,4 +5,7 @@ Install hooks either by copying the file(s) to `.git/hooks` or by changing [`cor
   * `pre-commit`:
     * check for .gitattributes settings
 
-Configure by cloning the repo and then something like: `git config --system core.hooksPath /path/to/git/hooks`
+Configure hooks by cloning the repo and then something like: `git config --system core.hooksPath /path/to/git/hooks`
+
+## utils
+  * `git_sync.py`: backup (pull) GitHub repositories to a (non-bare) local copy.
