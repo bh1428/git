@@ -11,7 +11,7 @@ import sys
 import typing
 import time
 
-__version__ = "2024.3.19"
+__version__ = "2024.12.8"
 
 # logging configuration
 LogConfigType = dict[str, typing.Union[typing.Any, dict[str, typing.Union[typing.Any, dict[str, typing.Any]]]]]
@@ -296,9 +296,17 @@ def process_folders(folders: list[str]) -> int:
     num_errors = 0
     for folder in folders:
         logger.info("processing folder '%s'", folder)
-        for repo_folder in get_repos_in_folder(folder):
-            if get_repo_remote_origin(repo_folder):
-                num_errors += pull_from_remote(repo_folder)
+        folder_path = pathlib.Path(folder)
+        repos = []
+        if folder_is_non_bare_git_repo(folder):
+            # folder itself is a (non-bare) Git repository
+            if get_repo_remote_origin(folder):
+                num_errors += pull_from_remote(folder)
+        else:
+            # folder itself is NOT a (non-bare) Git repository, examine sub folders
+            for repo_folder in get_repos_in_folder(folder):
+                if get_repo_remote_origin(repo_folder):
+                    num_errors += pull_from_remote(repo_folder)
 
     return num_errors
 
