@@ -1,9 +1,23 @@
-#!/bin/sh
-# check whether all files are explicitly configured in .gitattributes
-gitattributes_missing=$(git ls-files | git check-attr -a --stdin | grep "text: auto" | wc -l)
-if [ "$gitattributes_missing" -ne "0" ]
-then
+#!/bin/bash
+# get submodules (if any)
+submodules=$(git config --file .gitmodules --get-regexp path | awk '{print $2}')
+# get candidates with 'text: auto' attribute
+mapfile -t candidates < <(git ls-files | git check-attr -a --stdin | grep "text: auto")
+
+# filter out submodule directories from candidates
+missing_attributes=()
+for line in "${candidates[@]}"; do
+    if ! grep -qF "${line%%:*}" <<< "$submodules"; then
+        missing_attributes+=("$line")
+    fi
+done
+
+# check and report
+if [[ ${#missing_attributes[@]} -ne 0 ]]; then
     echo "Error: missing '.gitattributes' settings for:"
-    git ls-files | git check-attr -a --stdin | grep "text: auto"
+    for f in "${missing_attributes[@]}"; do
+        echo "${f}"
+    done
     exit 1
 fi
+exit 0
