@@ -20,6 +20,7 @@
 #
 *.md                text diff=markdown
 *.py                text diff=python
+LICENSE             text
 
 #
 # Never perform LF normalization
